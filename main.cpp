@@ -45,6 +45,13 @@ void realizarXOR(unsigned char* img1, unsigned char* img2, unsigned char* result
         resultado[i] = img1[i] ^ img2[i];
     }
 }
+unsigned char rotarDerecha(unsigned char valor, int bits) {
+    return (valor >> bits) | (valor << (8 - bits));
+}
+unsigned char rotarIzquierda(unsigned char valor, int bits) {
+    return (valor << bits) | (valor >> (8 - bits));
+}
+
 int main()
 {
     // Definición de rutas de archivo de entrada (imagen original) y salida (imagen modificada)
