@@ -40,7 +40,11 @@ using namespace std;
 unsigned char* loadPixels(QString input, int &width, int &height);
 bool exportImage(unsigned char* pixelData, int width,int height, QString archivoSalida);
 unsigned int* loadSeedMasking(const char* nombreArchivo, int &seed, int &n_pixels);
-
+void realizarXOR(unsigned char* img1, unsigned char* img2, unsigned char* resultado, int n_pixeles) {
+    for (int i = 0; i < n_pixeles * 3; i++) {
+        resultado[i] = img1[i] ^ img2[i];
+    }
+}
 int main()
 {
     // Definición de rutas de archivo de entrada (imagen original) y salida (imagen modificada)
