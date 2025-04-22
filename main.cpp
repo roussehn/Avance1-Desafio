@@ -51,6 +51,12 @@ unsigned char rotarDerecha(unsigned char valor, int bits) {
 unsigned char rotarIzquierda(unsigned char valor, int bits) {
     return (valor << bits) | (valor >> (8 - bits));
 }
+unsigned char desplazarDerecha(unsigned char valor, int bits) {
+    return valor >> bits;
+}
+unsigned char desplazarIzquierda(unsigned char valor, int bits) {
+    return valor << bits;
+}
 
 int main()
 {
@@ -278,16 +284,6 @@ unsigned int* loadSeedMasking(const char* nombreArchivo, int &seed, int &n_pixel
     // Retornar el puntero al arreglo con los datos RGB
     return RGB;
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
