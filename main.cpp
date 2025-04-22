@@ -57,6 +57,24 @@ unsigned char desplazarDerecha(unsigned char valor, int bits) {
 unsigned char desplazarIzquierda(unsigned char valor, int bits) {
     return valor << bits;
 }
+bool comprobarLaMascara(unsigned char* imagen, unsigned char* mascara, unsigned int* valoresTxt, int width, int height, int maskWidth, int maskHeight, int seed, int n_pixeles) {
+    int totalPixels = width * height;
+    int startIndex = seed * 3;
+    for (int k = 0; k < n_pixeles; ++k) {
+        if (startIndex + k * 3 + 2 >= totalPixels * 3) {
+            cout << "rrror: esta fuera del rango" << endl;
+            return false;
+        }
+
+        for (int c = 0; c < 3; ++c) {
+            int suma = imagen[startIndex + k * 3 + c] + mascara[k * 3 + c];
+            if (suma != valoresTxt[k * 3 + c]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 int main()
 {
