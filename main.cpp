@@ -107,6 +107,14 @@ bool comprobarLaMascara(unsigned char* imagen, unsigned char* mascara,
     }
     return true;
 }
+void desenmascarar(unsigned char* img, const unsigned char* mask,
+                   const unsigned int* S, int seed, int totalBytes) {
+    if (!img || !mask || !S || totalBytes <= 0)
+        return;
+    for (int k = 0; k < totalBytes; ++k) {
+        img[seed + k] = static_cast<unsigned char>((S[k] - mask[k]) & 0xFF);
+    }
+}
 
 int main()
 {
