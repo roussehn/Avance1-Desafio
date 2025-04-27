@@ -115,7 +115,101 @@ void desenmascarar(unsigned char* img, const unsigned char* mask,
         img[seed + k] = static_cast<unsigned char>((S[k] - mask[k]) & 0xFF);
     }
 }
+void reconstruirImagen() {
+    int width = 0, height = 0;
 
+    // Paso 1: Cargar imagen transformada final (P3.bmp)
+    unsigned char* img = loadPixels("P3.bmp", width, height);
+    if (!img) {
+        cout << " No se pudo cargar P3.bmp" << endl;
+        return;
+    }
+
+    // Paso 2: Cargar imagen aleatoria usada para XOR (I_M.bmp)
+    int w2 = 0, h2 = 0;
+    unsigned char* imRand = loadPixels("I_M.bmp", w2, h2);
+    if (!imRand || w2 != width || h2 != height) {
+        cout << " No se pudo cargar I_M.bmp o tamaño incorrecto" << endl;
+        delete[] img;
+        return;
+    }
+
+    // Paso 3: Cargar máscara (M.bmp)
+    int mw = 0, mh = 0;
+    unsigned char* mask = loadPixels("M.bmp", mw, mh);
+    if (!mask) {
+        delete[] img;
+        delete[] imRand;
+        return;
+    }
+
+    int totalBytes = width * height * 3;
+    int totalMaskBytes = mw * mh * 3;
+
+    // Paso 4: Cargar datos M1.txt y M2.txt
+    int seed1 = 0, n1 = 0;
+    unsigned int* S1 = loadSeedMasking("M1.txt", seed1, n1);
+    int seed2 = 0, n2 = 0;
+    unsigned int* S2 = loadSeedMasking("M2.txt", seed2, n2);
+
+    if (!S1 || !S2) {
+        cout << " Error al cargar archivos de enmascaramiento" << endl;
+        delete[] img;
+        delete[] imRand;
+        delete[] mask;
+        delete[] S1;
+        delete[] S2;
+        return;
+    }
+
+    // Puedes cambiar entre seed * 3 o solo seed según resultados
+    int offset1 = seed1;
+    int offset2 = seed2;
+
+    // Verifica si las regiones están dentro del rango
+    if (offset1 + totalMaskBytes > totalBytes || offset2 + totalMaskBytes > totalBytes) {
+        cout << " Regiones de enmascaramiento invalidas" << endl;
+        delete[] img;
+        delete[] imRand;
+        delete[] mask;
+        delete[] S1;
+        delete[] S2;
+        return;
+    }
+
+    // === PASO 3 INVERSO: XOR final ===
+    aplicarXOR(img, imRand, totalBytes);
+    exportImage(img, width, height, "debug_paso3_XOR.bmp");
+
+    // === PASO 2 INVERSO: desenmascarar con S2 y rotar izquierda ===
+    desenmascarar(img, mask, S2, offset2, totalMaskBytes);
+    bool valido2 = comprobarLaMascara(img, mask, S2, width, height, seed2, n2);
+    cout << "🔍 Validación M2.txt: " << (valido2 ? " Correcto" : " Incorrecto") << endl;
+    exportImage(img, width, height, "debug_paso2_desenmascara.bmp");
+
+    rotarBufferIzquierda(img, totalBytes, 3);
+    exportImage(img, width, height, "debug_paso2_rotado.bmp");
+
+    // === PASO 1 INVERSO: desenmascarar con S1 y XOR ===
+    desenmascarar(img, mask, S1, offset1, totalMaskBytes);
+    bool valido1 = comprobarLaMascara(img, mask, S1, width, height, seed1, n1);
+    cout << "🔍 Validación M1.txt: " << (valido1 ? " Correcto" : " Incorrecto") << endl;
+    exportImage(img, width, height, "debug_paso1_desenmascara.bmp");
+
+    aplicarXOR(img, imRand, totalBytes);
+    exportImage(img, width, height, "debug_final.bmp");
+
+    // Exportar imagen final reconstruida
+    exportImage(img, width, height, "I_D.bmp");
+    cout << " Imagen reconstruida y guardada como I_D.bmp" << endl;
+
+    // Liberar memoria
+    delete[] img;
+    delete[] imRand;
+    delete[] mask;
+    delete[] S1;
+    delete[] S2;
+}
 int main()
 {
     // Definición de rutas de archivo de entrada (imagen original) y salida (imagen modificada)
