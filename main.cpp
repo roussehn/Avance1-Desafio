@@ -75,6 +75,11 @@ bool comprobarLaMascara(unsigned char* imagen, unsigned char* mascara, unsigned 
     }
     return true;
 }
+void aplicarXOR(unsigned char* img, const unsigned char* mask, int totalBytes) {
+    for (int i = 0; i < totalBytes; ++i) {
+        img[i] ^= mask[i];
+    }
+}
 
 int main()
 {
@@ -127,7 +132,7 @@ int main()
         delete[] maskingData;
         maskingData = nullptr;
     }
-
+    reconstruirImagen();
     return 0; // Fin del programa
 }
 
