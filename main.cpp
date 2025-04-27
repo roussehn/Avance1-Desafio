@@ -80,6 +80,11 @@ void aplicarXOR(unsigned char* img, const unsigned char* mask, int totalBytes) {
         img[i] ^= mask[i];
     }
 }
+void rotarBufferIzquierda(unsigned char* buffer, int totalBytes, int bits) {
+    for (int i = 0; i < totalBytes; ++i) {
+        buffer[i] = rotarIzquierda(buffer[i], bits);
+    }
+}
 
 int main()
 {
