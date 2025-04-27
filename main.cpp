@@ -85,6 +85,28 @@ void rotarBufferIzquierda(unsigned char* buffer, int totalBytes, int bits) {
         buffer[i] = rotarIzquierda(buffer[i], bits);
     }
 }
+bool comprobarLaMascara(unsigned char* imagen, unsigned char* mascara,
+                        unsigned int* valoresTxt, int width, int height,
+                        int seed, int n_pixeles) {
+    int totalPixels = width * height;
+    int startIndex = seed * 3;
+
+    for (int k = 0; k < n_pixeles; ++k) {
+        unsigned int idx = startIndex + k * 3;
+        if (idx + 2 >= static_cast<unsigned int>(totalPixels * 3)) {
+            cout << "Error: fuera de rango en comprobarLaMascara" << endl;
+            return false;
+        }
+
+        for (int c = 0; c < 3; ++c) {
+            int suma = imagen[idx + c] + mascara[k * 3 + c];
+            if (suma != static_cast<int>(valoresTxt[k * 3 + c])) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 int main()
 {
