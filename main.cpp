@@ -184,7 +184,7 @@ void reconstruirImagen() {
     // === PASO 2 INVERSO: desenmascarar con S2 y rotar izquierda ===
     desenmascarar(img, mask, S2, offset2, totalMaskBytes);
     bool valido2 = comprobarLaMascara(img, mask, S2, width, height, seed2, n2);
-    cout << "🔍 Validación M2.txt: " << (valido2 ? " Correcto" : " Incorrecto") << endl;
+    cout << "🔍 Validacion M2.txt: " << (valido2 ? " Correcto" : " Incorrecto") << endl;
     exportImage(img, width, height, "debug_paso2_desenmascara.bmp");
 
     rotarBufferIzquierda(img, totalBytes, 3);
@@ -193,7 +193,7 @@ void reconstruirImagen() {
     // === PASO 1 INVERSO: desenmascarar con S1 y XOR ===
     desenmascarar(img, mask, S1, offset1, totalMaskBytes);
     bool valido1 = comprobarLaMascara(img, mask, S1, width, height, seed1, n1);
-    cout << "🔍 Validación M1.txt: " << (valido1 ? " Correcto" : " Incorrecto") << endl;
+    cout << "🔍 Validacion M1.txt: " << (valido1 ? " Correcto" : " Incorrecto") << endl;
     exportImage(img, width, height, "debug_paso1_desenmascara.bmp");
 
     aplicarXOR(img, imRand, totalBytes);
@@ -431,7 +431,7 @@ unsigned int* loadSeedMasking(const char* nombreArchivo, int &seed, int &n_pixel
 
     // Mostrar información de control en consola
     cout << "Semilla: " << seed << endl;
-    cout << "Cantidad de píxeles leídos: " << n_pixels << endl;
+    cout << "Cantidad de píxeles leidos: " << n_pixels << endl;
 
     // Retornar el puntero al arreglo con los datos RGB
     return RGB;
